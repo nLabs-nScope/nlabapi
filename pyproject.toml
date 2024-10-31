@@ -5,12 +5,13 @@ build-backend = "maturin"
 [project]
 name = "nlabapi"
 requires-python = ">=3.8"
-classifiers = [
-    "Programming Language :: Rust",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
-]
+readme = "README.md"
+license = { file = "LICENSE" }
 dynamic = ["version"]
+
+[project.scripts]
+nlab = "nlabapi:run_cli"
+
 [tool.maturin]
 module-name = "nlabapi"
 features = ["pyo3/extension-module"]

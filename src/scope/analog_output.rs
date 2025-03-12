@@ -192,8 +192,8 @@ impl ScopeCommand for AxRequest {
 
             usb_buf[i_ch + 1] = (freq_register & 0x00FF) as u8;
             usb_buf[i_ch + 2] = ((freq_register & 0x3F00) >> 8) as u8;
-            usb_buf[i_ch + 3] = (freq_register >> 14 & 0x00FF) as u8;
-            usb_buf[i_ch + 4] = ((freq_register >> 14 & 0x3F00) >> 8) as u8;
+            usb_buf[i_ch + 3] = ((freq_register >> 14) & 0x00FF) as u8;
+            usb_buf[i_ch + 4] = (((freq_register >> 14) & 0x3F00) >> 8) as u8;
 
             if self.ax_state.amplitude < 0.0 {
                 usb_buf[i_ch] |= 0x2;

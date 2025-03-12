@@ -238,8 +238,8 @@ impl ScopeCommand for DataRequest {
                     let byte = 4 + total_parsed_readings / 2 * 3;
 
                     let adc_data = match total_parsed_readings & 1 {
-                        0 => usb_buf[byte] as u16 | ((usb_buf[byte + 1] & 0xF) as u16) << 8,
-                        1 => usb_buf[byte + 1] as u16 >> 4 | (usb_buf[byte + 2] as u16) << 4,
+                        0 => (usb_buf[byte] as u16) | (((usb_buf[byte + 1] & 0xF) as u16) << 8),
+                        1 => (usb_buf[byte + 1] as u16 >> 4) | ((usb_buf[byte + 2] as u16) << 4),
                         _ => panic!("Unexpected behavior of odd/even bitmask")
                     };
 
@@ -268,8 +268,8 @@ impl DataRequest {
             let byte: usize = 4 + num_parsed / 2 * 3;
 
             let adc_data = match num_parsed % 2 {
-                0 => usb_buf[byte] as u16 | ((usb_buf[byte + 1] & 0xF) as u16) << 8,
-                1 => usb_buf[byte + 1] as u16 >> 4 | (usb_buf[byte + 2] as u16) << 4,
+                0 => (usb_buf[byte] as u16) | (((usb_buf[byte + 1] & 0xF) as u16) << 8),
+                1 => (usb_buf[byte + 1] as u16 >> 4) | ((usb_buf[byte + 2] as u16) << 4),
                 _ => panic!("Unexpected behavior of odd/even bitmask")
             };
             self.data_collator.write().unwrap()[channel].push_back(adc_data);

@@ -110,8 +110,15 @@ impl ScopeCommand for DataRequest {
         };
 
         let total_samples = *self.remaining_samples.read().unwrap();
+
         if samples_between_records < 250 && total_samples * num_channels_on as u32 > 3200 {
-            return Err("Data not recordable".into());
+            let channel_string = match num_channels_on {
+                1 => format!("{num_channels_on} channel"),
+                _ => format!("{num_channels_on} channels")
+            };
+
+            return Err(format!("Cannot fulfill data request: maximum number of samples with {} at {} hz is {}", 
+                               channel_string, self.sample_rate_hz, 3200 / num_channels_on).into());
         }
 
 
@@ -165,7 +172,8 @@ impl ScopeCommand for DataRequest {
         let total_samples = *self.remaining_samples.read().unwrap();
         debug!("Requesting {} samples with {} samples between records", total_samples, samples_between_records);
         if samples_between_records < 25 && total_samples > 2400 {
-            return Err("Data not recordable".into());
+            return Err(format!("Cannot fulfill data request: maximum number of samples at {} hz is {}",
+                               self.sample_rate_hz, 2400).into());
         }
 
         usb_buf[2..6].copy_from_slice(&samples_between_records.to_le_bytes());

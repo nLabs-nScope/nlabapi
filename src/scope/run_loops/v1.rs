@@ -48,32 +48,40 @@ impl crate::Nlab {
 
                 // Process the command
                 // 1. fill the outgoing USB buffer
-                // 2. increment the request id
-                // 3. send the
-                // 3. store whatever we want to send back
                 outgoing_usb_buffer.fill(0);
                 let result = command.fill_tx_buffer_legacy(&mut outgoing_usb_buffer);
-                if result.is_err() {
-                    eprintln!("{:?}", result);
-                }
-                {
-                    //TODO: make this block more concise
-                    request_id = request_id.wrapping_add(1);
-                    if request_id == 0 {
-                        request_id += 1
+                if result.is_ok() {
+                    // If we can successfully create a request packet, then
+                    // 2. increment the request id
+                    // 3. send the request packet
+                    {
+                        //TODO: make this block more concise
+                        request_id = request_id.wrapping_add(1);
+                        if request_id == 0 {
+                            request_id += 1
+                        }
+                        outgoing_usb_buffer[2] = request_id;
                     }
-                    outgoing_usb_buffer[2] = request_id;
-                }
-                if hid_device.write(&outgoing_usb_buffer).is_err() {
-                    eprintln!("USB write error, ending nLab connection");
-                    break 'communication;
-                }
+                    if hid_device.write(&outgoing_usb_buffer).is_err() {
+                        eprintln!("USB write error, ending nLab connection");
+                        break 'communication;
+                    }
 
-                if let Command::RequestData(_) = &command {
-                    active_data_request = Some(request_id);
+                    if let Command::RequestData(_) = &command {
+                        active_data_request = Some(request_id);
+                    }
+                    active_requests_map.insert(request_id, command);
+                    trace!("Sent request {}", request_id);
+                } else {
+                    // If we cannot successfully create a request packet, then
+                    // 1. Print the error
+                    // 2. send a null request for status
+                    eprintln!("{:?}", result);
+                    if hid_device.write(&commands::NULL_REQ).is_err() {
+                        eprintln!("USB write error, ending nLab connection");
+                        break 'communication;
+                    }
                 }
-                active_requests_map.insert(request_id, command);
-                trace!("Sent request {}", request_id);
             } else if hid_device.write(&commands::NULL_REQ).is_err() {
                 eprintln!("USB write error, ending nLab connection");
                 break 'communication;
@@ -101,7 +109,7 @@ impl crate::Nlab {
                     // Handle the incoming usb packet
                     command.handle_rx_legacy(&incoming_usb_buffer);
 
-                    // If the command has finished it's work
+                    // If the command has finished its work
                     if command.is_finished() {
 
                         // Set the active data request as none if we just finished it

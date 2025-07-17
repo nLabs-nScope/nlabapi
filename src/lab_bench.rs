@@ -314,8 +314,7 @@ impl fmt::Debug for NlabLink {
         if self.in_dfu {
             write!(
                 f,
-                "Link to {} [ in DFU mode ]",
-                device_name,
+                "Link to {device_name} [ in DFU mode ]",
             )
         } else if self.needs_update {
             write!(

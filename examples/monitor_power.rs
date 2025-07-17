@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     let state = format!("{:?}", status.state);
                     println!("{:>15}: {:.3} Watts", state, status.usage)
                 },
-                Err(error) => eprintln!("{}", error),
+                Err(error) => eprintln!("{error}"),
             }
         }
 

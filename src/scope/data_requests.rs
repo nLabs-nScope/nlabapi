@@ -124,7 +124,7 @@ impl ScopeCommand for DataRequest {
 
         usb_buf[3..=6].copy_from_slice(&samples_between_records.to_le_bytes());
         usb_buf[7..=10].copy_from_slice(&total_samples.to_le_bytes());
-        trace!("Requesting {} samples with {} samples between records", total_samples, samples_between_records);
+        trace!("Requesting {total_samples} samples with {samples_between_records} samples between records");
 
         if self.trigger.is_enabled {
             usb_buf[11] = self.trigger.source_channel as u8 | (self.trigger.trigger_type.value() << 2);
@@ -170,7 +170,7 @@ impl ScopeCommand for DataRequest {
         let samples_between_records: u32 = (2_000_000.0 / self.sample_rate_hz) as u32;
 
         let total_samples = *self.remaining_samples.read().unwrap();
-        debug!("Requesting {} samples with {} samples between records", total_samples, samples_between_records);
+        debug!("Requesting {total_samples} samples with {samples_between_records} samples between records");
         if samples_between_records < 25 && total_samples > 2400 {
             return Err(format!("Cannot fulfill data request: maximum number of samples at {} hz is {}",
                                self.sample_rate_hz, 2400).into());
@@ -213,7 +213,7 @@ impl ScopeCommand for DataRequest {
             usb_buf[16..=17].copy_from_slice(&trigger_level.to_le_bytes());
 
             let trigger_delay = 2 * self.trigger.trigger_delay_us / samples_between_records;
-            debug!("Trigger Delay: {:?}", trigger_delay);
+            debug!("Trigger Delay: {trigger_delay:?}");
             usb_buf[18..=21].copy_from_slice(&trigger_delay.to_le_bytes());
         } else {
             usb_buf[14..=21].fill(0);
@@ -229,7 +229,7 @@ impl ScopeCommand for DataRequest {
         {
             let mut remaining_samples = self.remaining_samples.write().unwrap();
             *remaining_samples -= number_received_samples;
-            trace!("Received {} samples, {} samples remaining", number_received_samples, remaining_samples);
+            trace!("Received {number_received_samples} samples, {remaining_samples} samples remaining");
         }
 
 
@@ -320,7 +320,7 @@ impl DataRequest {
             if complete_samples > 0 {
                 let mut remaining_samples = self.remaining_samples.write().unwrap();
                 *remaining_samples -= complete_samples as u32;
-                trace!("Received {} samples, {} samples remaining", complete_samples, remaining_samples);
+                trace!("Received {complete_samples} samples, {remaining_samples} samples remaining");
             }
         }
     }

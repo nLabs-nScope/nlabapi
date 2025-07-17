@@ -71,12 +71,12 @@ impl crate::Nlab {
                         active_data_request = Some(request_id);
                     }
                     active_requests_map.insert(request_id, command);
-                    trace!("Sent request {}", request_id);
+                    trace!("Sent request {request_id}");
                 } else {
                     // If we cannot successfully create a request packet, then
                     // 1. Print the error
                     // 2. send a null request for status
-                    eprintln!("{:?}", result);
+                    eprintln!("{result:?}");
                     if hid_device.write(&commands::NULL_REQ).is_err() {
                         eprintln!("USB write error, ending nLab connection");
                         break 'communication;
@@ -128,9 +128,9 @@ impl crate::Nlab {
                             }
                         }
 
-                        trace!("Finished request ID: {}, ADRQ: {:?}", response.request_id, active_data_request);
+                        trace!("Finished request ID: {}, ADRQ: {active_data_request:?}", response.request_id);
                     } else {
-                        trace!("Received request ID: {}, ADRQ: {:?}", response.request_id, active_data_request);
+                        trace!("Received request ID: {}, ADRQ: {active_data_request:?}", response.request_id);
                     }
                 } else {
                     error!("Received response for request {}, but cannot find a record of that request", response.request_id);

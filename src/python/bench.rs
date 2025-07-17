@@ -21,7 +21,7 @@ impl python::LabBench {
     fn list_all_nlabs() {
         if let Ok(bench) = LabBench::new() {
             for nlab_link in bench.list() {
-                println!("{:?}", nlab_link);
+                println!("{nlab_link:?}");
             }
         } else {
             println!("Cannot create LabBench");

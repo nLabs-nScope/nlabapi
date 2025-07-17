@@ -29,7 +29,7 @@ impl crate::Nlab {
                 if let Ok(()) = rq.stop_recv.try_recv() {
                     // We have received a stop signal
                     command_tx.send(Command::StopData).unwrap();
-                    debug!("Sent a stop command to request {}", id);
+                    debug!("Sent a stop command to request {id}");
                 }
             }
 
@@ -79,7 +79,7 @@ impl crate::Nlab {
                                                               &outgoing_usb_buffer,
                                                               Duration::from_millis(100))
                     {
-                        error!("USB write error: {:?}", error);
+                        error!("USB write error: {error:?}");
                         break 'communication;
                     }
                 }
@@ -108,16 +108,16 @@ impl crate::Nlab {
 
                             // If the command has finished it's work
                             if command.is_finished() {
-                                debug!("Finished request ID: {}", request_id);
+                                debug!("Finished request ID: {request_id}");
                                 if let Command::StopData = command {
                                     active_data_request = None;
                                 }
                             } else {
-                                debug!("Received request ID: {}", request_id);
+                                debug!("Received request ID: {request_id}");
                             }
 
                             if let Command::RequestData(_) = command {
-                                debug!("Setting Active Data Request: {}", request_id);
+                                debug!("Setting Active Data Request: {request_id}");
                                 active_data_request = active_comms_request.take();
                             } else {
                                 active_comms_request = None;
@@ -128,7 +128,7 @@ impl crate::Nlab {
                     }
                 }
                 Err(error) => {
-                    error!("USB read error: {:?}", error);
+                    error!("USB read error: {error:?}");
                     break 'communication;
                 }
             }
@@ -144,14 +144,14 @@ impl crate::Nlab {
                             Err(rusb::Error::Timeout) => {}
                             Ok(_) => {
                                 let received_request_id = buf[0];
-                                debug!("Received data for request {}, active request {}", received_request_id, request_id);
+                                debug!("Received data for request {received_request_id}, active request {request_id}");
                                 if received_request_id == *request_id {
                                     data_request.handle_incoming_data(buf, ch);
                                     received_ch_data = true;
                                 }
                             }
                             Err(error) => {
-                                error!("USB read error: {:?}", error);
+                                error!("USB read error: {error:?}");
                                 break 'communication;
                             }
                         }
@@ -165,7 +165,7 @@ impl crate::Nlab {
                 if let Some((request_id, Command::RequestData(data_request))) = &active_data_request {
                     data_request.collate_results();
                     if data_request.is_finished() {
-                        debug!("Finished request ID: {}", request_id);
+                        debug!("Finished request ID: {request_id}");
                         active_data_request = None;
                     }
                 }

@@ -12,7 +12,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         Ok(ax.is_on())
@@ -24,7 +24,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         Ok(ax.frequency())
@@ -36,7 +36,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         Ok(ax.amplitude())
@@ -48,7 +48,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         Ok(ax.wave_type())
@@ -60,7 +60,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         Ok(ax.polarity())
@@ -72,7 +72,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         ax.turn_on();
@@ -85,7 +85,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         ax.turn_off();
@@ -98,7 +98,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         ax.set_frequency(desired_hz);
@@ -111,7 +111,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         ax.set_amplitude(desired_volts);
@@ -124,7 +124,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         ax.set_wave_type(wave_type);
@@ -137,7 +137,7 @@ impl python::Nlab {
         let ax = match ch {
             1 => &scope.a1,
             2 => &scope.a2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         ax.set_polarity(polarity);

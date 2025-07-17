@@ -49,7 +49,7 @@ pub(crate) enum Command {
 
 impl Command {
     pub(super) fn fill_tx_buffer_legacy(&mut self, usb_buf: &mut [u8; 65]) -> Result<(), Box<dyn Error>> {
-        debug!("Processed command: {:?}", self);
+        debug!("Processed command: {self:?}");
         match self {
             Command::Quit => { Ok(()) }
             Command::Initialize(power_on, _) => {

@@ -34,7 +34,7 @@ impl Default for PowerStatus {
 #[pymethods]
 impl PowerStatus {
     fn __repr__(&self) -> String {
-        format!("{:?}", self)
+        format!("{self:?}")
     }
 }
 

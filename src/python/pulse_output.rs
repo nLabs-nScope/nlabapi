@@ -12,7 +12,7 @@ impl python::Nlab {
         let px = match ch {
             1 => &scope.p1,
             2 => &scope.p2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         Ok(px.is_on())
@@ -24,7 +24,7 @@ impl python::Nlab {
         let px = match ch {
             1 => &scope.p1,
             2 => &scope.p2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         Ok(px.frequency())
@@ -36,7 +36,7 @@ impl python::Nlab {
         let px = match ch {
             1 => &scope.p1,
             2 => &scope.p2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         Ok(px.duty())
@@ -48,7 +48,7 @@ impl python::Nlab {
         let px = match ch {
             1 => &scope.p1,
             2 => &scope.p2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         Ok(px.period().as_secs_f64())
@@ -60,7 +60,7 @@ impl python::Nlab {
         let px = match ch {
             1 => &scope.p1,
             2 => &scope.p2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         Ok(px.pulse_width().as_secs_f64())
@@ -72,7 +72,7 @@ impl python::Nlab {
         let px = match ch {
             1 => &scope.p1,
             2 => &scope.p2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         px.turn_on();
@@ -85,7 +85,7 @@ impl python::Nlab {
         let px = match ch {
             1 => &scope.p1,
             2 => &scope.p2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         px.turn_off();
@@ -98,7 +98,7 @@ impl python::Nlab {
         let px = match ch {
             1 => &scope.p1,
             2 => &scope.p2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         px.set_frequency(desired_hz);
@@ -111,7 +111,7 @@ impl python::Nlab {
         let px = match ch {
             1 => &scope.p1,
             2 => &scope.p2,
-            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {}", ch)))
+            _ => return Err(PyValueError::new_err(format!("Invalid channel number: {ch}")))
         };
 
         px.set_duty(desired_percentage);

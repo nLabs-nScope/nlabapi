@@ -18,12 +18,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     let bench = LabBench::new()?;
 
     // Print the bench to show a list of detected nLabs
-    println!("Lab Bench: \n{:?}", bench);
+    println!("Lab Bench: \n{bench:?}");
 
     println!("\nManual list of all detected nLabs:");
     // Or loop over all nLab links in the list and print them
     for nlab_link in bench.list() {
-        println!("    {:?}", nlab_link)
+        println!("    {nlab_link:?}")
     }
     Ok(())
 }

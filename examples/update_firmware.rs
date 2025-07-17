@@ -20,7 +20,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut bench = LabBench::new()?;
 
     // Print the bench to show a list of detected nLabs
-    println!("{:?}", bench);
+    println!("{bench:?}");
 
     for nlab_link in bench.list() {
         // Request DFU on any nLab that is available
@@ -36,7 +36,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     bench.refresh();
 
     // Print the bench to show the refreshed list
-    println!("{:?}", bench);
+    println!("{bench:?}");
 
     for nlab_link in bench.list() {
         if let Err(e) = nlab_link.update() {

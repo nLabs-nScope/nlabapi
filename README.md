@@ -1,8 +1,9 @@
 # nlabapi
 [![Crates.io](https://img.shields.io/crates/v/nlabapi)](https://crates.io/crates/nlabapi)
+![PyPI - Version](https://img.shields.io/pypi/v/nlabapi)
 [![License](https://img.shields.io/crates/l/nlabapi)](LICENSE)
-[![Documentation](https://docs.rs/nlabapi/badge.svg)](https://docs.rs/nlabapi)
 
+[![Documentation](https://docs.rs/nlabapi/badge.svg)](https://docs.rs/nlabapi)
 ![Cargo Test](https://github.com/nLabs-nScope/nlabapi/actions/workflows/tests.yml/badge.svg)
 ![Python CI](https://github.com/nLabs-nScope/nlabapi/actions/workflows/build_python.yml/badge.svg)
 

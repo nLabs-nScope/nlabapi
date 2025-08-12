@@ -1,6 +1,6 @@
 # nlabapi
 [![Crates.io](https://img.shields.io/crates/v/nlabapi)](https://crates.io/crates/nlabapi)
-![PyPI - Version](https://img.shields.io/pypi/v/nlabapi)
+[![PyPI - Version](https://img.shields.io/pypi/v/nlabapi)](https://pypi.org/project/nlabapi/)
 [![License](https://img.shields.io/crates/l/nlabapi)](LICENSE)
 
 [![Documentation](https://docs.rs/nlabapi/badge.svg)](https://docs.rs/nlabapi)

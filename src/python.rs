@@ -21,7 +21,7 @@ fn run_cli(_py: Python) -> PyResult<()> {
     let cli = Cli::parse_from(args);
 
     match &cli.command {
-        Commands::Update => { LabBench::update_all_nlabs() }
+        Commands::Update(args) => { LabBench::update_all_nlabs(args.force_downgrade) }
     }
 }
 

@@ -13,7 +13,8 @@ use std::{fmt, io};
 use std::error::Error;
 use std::sync::{Arc, RwLock};
 use std::time::Duration;
-use crate::firmware::{FIRMWARE, FIRMWARE_VERSION};
+use rusb::Version;
+use crate::firmware::{FIRMWARE, SUPPORTED_FIRMWARE_VERSION};
 
 #[derive(Clone)]
 pub(crate) struct HidDevice(hidapi::DeviceInfo);
@@ -57,6 +58,7 @@ pub struct NlabLink {
     pub available: bool,
     pub in_dfu: bool,
     pub needs_update: bool,
+    device_version: Option<Version>,
     device: NlabDevice,
 }
 
@@ -113,34 +115,30 @@ impl LabBench {
 
 
         for nsl in self.list() {
+            // If we've gotten here, change the default error
+            err = io::Error::new(io::ErrorKind::ConnectionRefused, "Cannot connect to any nLabs");
+
             if let Ok(nlab) = nsl.open(power_on) {
                 // return the first open nLab
                 return Ok(nlab);
+            } else if nsl.needs_update && nsl.must_be_downgraded() {
+                err = io::Error::new(io::ErrorKind::ConnectionRefused, "Cannot connect to any nLabs: firmware downgrade needed")
+            } else if nsl.needs_update {
+                err = io::Error::new(io::ErrorKind::ConnectionRefused, "Cannot connect to any nLabs: firmware update needed")
             }
-            // If we've gotten here, then the error is that we cannot open an nLab
-            err = io::Error::new(io::ErrorKind::ConnectionRefused, "Cannot connect to any nLabs");
+
         }
         Err(err)
     }
 
     /// Returns the first nLab that is in DFU mode
     pub fn get_first_in_dfu(&self) -> Option<NlabLink> {
-        for nsl in self.list() {
-            if nsl.in_dfu {
-                return Some(nsl)
-            }
-        }
-        None
+        self.list().find(|nsl| nsl.in_dfu)
     }
 
     /// Returns the first nLab that is available and needs an update
     pub fn get_first_needing_update(&self) -> Option<NlabLink> {
-        for nsl in self.list() {
-            if nsl.needs_update && nsl.available {
-                return Some(nsl)
-            }
-        }
-        None
+        self.list().find(|nsl| nsl.needs_update && nsl.available)
     }
 }
 
@@ -160,6 +158,7 @@ impl NlabLink {
                 available,
                 in_dfu: false,
                 needs_update: false,
+                device_version: None,
                 device: NlabDevice::HidApiDevice { device: info.clone(), api: Arc::clone(&api) },
             });
         }
@@ -182,7 +181,8 @@ impl NlabLink {
                 return Some(NlabLink {
                     available,
                     in_dfu: false,
-                    needs_update: firmware_version != rusb::Version::from_bcd(FIRMWARE_VERSION),
+                    needs_update: firmware_version != Version::from_bcd(SUPPORTED_FIRMWARE_VERSION),
+                    device_version: Some(firmware_version),
                     device: NlabDevice::RusbDevice(device),
                 });
             } else if device_desc.vendor_id() == 0x0483 && device_desc.product_id() == 0xA4AB {
@@ -190,6 +190,7 @@ impl NlabLink {
                     available: false,
                     in_dfu: true,
                     needs_update: false,
+                    device_version: None,
                     device: NlabDevice::RusbDevice(device),
                 });
             }
@@ -197,6 +198,14 @@ impl NlabLink {
         None
     }
 
+    ///
+    /// Determines if an NlabLink must be downgraded in order to function
+    ///
+    ///
+    ///
+    pub(crate) fn must_be_downgraded(&self) -> bool {
+        self.needs_update && self.device_version.is_some_and(|v| v > Version::from_bcd(SUPPORTED_FIRMWARE_VERSION))
+    }
 
     ///
     /// Takes an NlabLink and checks to ensure the device is still connected.
@@ -312,24 +321,20 @@ impl fmt::Debug for NlabLink {
             NlabDevice::RusbDevice(_) => { "nLab v2" }
         };
         if self.in_dfu {
-            write!(
-                f,
-                "Link to {device_name} [ in DFU mode ]",
-            )
-        } else if self.needs_update {
-            write!(
-                f,
-                "Link to {} [ REQUIRES FIRMWARE UPDATE ] [ available: {} ]",
-                device_name,
-                self.available,
-            )
-        } else {
-            write!(
-                f,
-                "Link to {} [ available: {} ]",
-                device_name,
-                self.available,
-            )
+            return write!(f, "Link to {device_name} [ in DFU mode ]");
         }
+        if self.needs_update {
+            return match self.device_version {
+                Some(v) if v < Version::from_bcd(SUPPORTED_FIRMWARE_VERSION) => {
+                    write!(f, "Link to {device_name} [ Firmware Update Needed ]")
+                }
+                Some(v) if v > Version::from_bcd(SUPPORTED_FIRMWARE_VERSION) => {
+                    write!(f, "Link to {device_name} [ Device is running newer firmware, software update needed ]")
+                }
+                Some(_) => { write!(f, "Link to {device_name} [ Unknown firmware mismatch ]") }
+                None => { write!(f, "Link to {device_name} [ Unknown firmware mismatch ]") }
+            };
+        }
+        write!(f, "Link to {device_name} [ available: {} ]", self.available)
     }
 }

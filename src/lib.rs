@@ -55,7 +55,7 @@ mod lab_bench;
 mod scope;
 mod version;
 mod firmware;
-mod python;
+#[cfg(feature = "python_support")] mod python;
 
 pub use lab_bench::LabBench;
 pub use lab_bench::NlabLink;

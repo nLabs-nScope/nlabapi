@@ -29,6 +29,8 @@ jobs:
         run: cargo clippy --all-targets --all-features -- -D warnings
       - name: run tests
         run: cargo test --verbose -- --nocapture
+      - name: run tests without python
+        run: cargo test --no-default-features --verbose -- --nocapture
 
   macos:
     name: macos tests
@@ -45,6 +47,8 @@ jobs:
         run: cargo clippy --all-targets --all-features -- -D warnings
       - name: run tests
         run: cargo test --verbose -- --nocapture
+      - name: run tests without python
+        run: cargo test --no-default-features --verbose -- --nocapture
 
   windows:
     name: windows tests
@@ -59,3 +63,5 @@ jobs:
         run: cargo clippy --all-targets --all-features -- -D warnings
       - name: run tests
         run: cargo test --verbose -- --nocapture
+      - name: run tests without python
+        run: cargo test --no-default-features --verbose -- --nocapture

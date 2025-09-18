@@ -9,16 +9,15 @@
  **************************************************************************************************/
 
 use std::io;
+#[cfg(feature = "python_support")]
 use pyo3::{pyclass, pymethods};
 use super::Nlab;
 
 /// Information about the power supply status of nLab
 #[derive(Debug, Copy, Clone)]
-#[pyclass]
+#[cfg_attr(feature = "python_support", pyclass(get_all))]
 pub struct PowerStatus {
-    #[pyo3(get)]
     pub state: PowerState,
-    #[pyo3(get)]
     pub usage: f64,
 }
 
@@ -31,7 +30,7 @@ impl Default for PowerStatus {
     }
 }
 
-#[pymethods]
+#[cfg_attr(feature = "python_support", pymethods)]
 impl PowerStatus {
     fn __repr__(&self) -> String {
         format!("{self:?}")
@@ -40,7 +39,7 @@ impl PowerStatus {
 
 /// Possible states of the nLab power supply
 #[derive(Debug, PartialEq, Copy, Clone)]
-#[pyclass(eq, eq_int)]
+#[cfg_attr(feature = "python_support", pyclass(eq, eq_int))]
 pub enum PowerState {
     PowerOff,
     PowerOn,

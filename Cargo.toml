@@ -24,8 +24,12 @@ regex = "~1"
 rusb = { version = "0.9.3", features = ["vendored"] }
 dfu-libusb = "0.5.1"
 clap = { version = "4.5.16", features = ["derive"] }
-pyo3 = { version = "~0.25", features = ["multiple-pymethods"] }
+pyo3 = { version = "~0.25", features = ["multiple-pymethods"], optional = true }
 
 [dev-dependencies]
 env_logger = "0.10.0"
 semver = "1.0.17"
+
+[features]
+default = ["python_support"]  # keep PyO3 enabled by default if you want
+python_support = ["pyo3"]
